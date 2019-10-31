@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Spice.Data;
+using Spice.Models;
 
 namespace Spice.Areas.Admin.Controllers
 {
@@ -23,6 +24,25 @@ namespace Spice.Areas.Admin.Controllers
             var categories = await _context.Categories.ToListAsync();
 
             return View(categories);
+        }
+
+        // GET Admin/Category/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST Admin/Category/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(Category model)
+        {
+            if (!ModelState.IsValid) return View(model);
+
+            await _context.Categories.AddAsync(model);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

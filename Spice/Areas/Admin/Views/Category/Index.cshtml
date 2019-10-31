@@ -13,7 +13,7 @@
             <h2 class="text-info">Category List</h2>
         </div>
         <div class="col-sm-6 text-right">
-            Create Button
+            <partial name="_CreateButtonPartial" />
         </div>
     </div>
     <br />
@@ -34,7 +34,7 @@
                     <td>
                         @Html.DisplayFor(m => category.Name)
                     </td>
-                    <td>
+                    <td class="text-right">
                         DETAILS | EDIT | DELETE
                     </td>
                 </tr>
@@ -43,7 +43,7 @@
         }
         else
         {
-            <p>No Categories currently exist. You can start adding new Categories by clicking the Create New button above.</p>
+            <p>No Categories currently exist. You can start adding new Categories by clicking the <b>Create New</b> button above.</p>
         }
     </div>
 </div>
