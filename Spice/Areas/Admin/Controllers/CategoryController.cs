@@ -47,6 +47,20 @@ namespace Spice.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+
+        // GET Admin/Category/Details/{id}
+        [HttpGet]
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null) return BadRequest();
+
+            var category = await _context.Categories.FindAsync(id);
+            if (category == null) return NotFound();
+
+            return View(category);
+        }
+
+
         // GET Admin/Category/Edit/{id}
         [HttpGet]
         public async Task<IActionResult> Edit(int? id)
