@@ -19,6 +19,7 @@ namespace Spice.Areas.Admin.Controllers
         }
 
         // GET Admin/Category/Index
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var categories = await _context.Categories.ToListAsync();
@@ -27,6 +28,7 @@ namespace Spice.Areas.Admin.Controllers
         }
 
         // GET Admin/Category/Create
+        [HttpGet]
         public IActionResult Create()
         {
             return View();
@@ -40,6 +42,33 @@ namespace Spice.Areas.Admin.Controllers
             if (!ModelState.IsValid) return View(model);
 
             await _context.Categories.AddAsync(model);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        // GET Admin/Category/Edit
+        [HttpGet]
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null) return BadRequest();
+
+            var category = await _context.Categories.FindAsync(id);
+            if (category == null) return NotFound();
+
+            return View(category);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(Category model)
+        {
+            if (!ModelState.IsValid) return View(model);
+
+            var categoryFromDb = await _context.Categories.FindAsync(model.CategoryId);
+            if (categoryFromDb == null) return BadRequest();
+
+            categoryFromDb.Name = model.Name;
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
