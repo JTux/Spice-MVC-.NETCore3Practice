@@ -47,7 +47,7 @@ namespace Spice.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET Admin/Category/Edit
+        // GET Admin/Category/Edit/{id}
         [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -59,6 +59,7 @@ namespace Spice.Areas.Admin.Controllers
             return View(category);
         }
 
+        // POST Admin/Category/Edit/{id}
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Category model)
@@ -69,6 +70,32 @@ namespace Spice.Areas.Admin.Controllers
             if (categoryFromDb == null) return BadRequest();
 
             categoryFromDb.Name = model.Name;
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        // GET Admin/Category/Delete/{id}
+        [HttpGet]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null) return BadRequest();
+
+            var category = await _context.Categories.FindAsync(id);
+            if (category == null) return NotFound();
+
+            return View(category);
+        }
+
+        // POST Admin/Category/Delete/{id}
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeletePost(int id)
+        {
+            var categoryFromDb = await _context.Categories.FindAsync(id);
+            if (categoryFromDb == null) return BadRequest();
+
+            _context.Categories.Remove(categoryFromDb);
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
